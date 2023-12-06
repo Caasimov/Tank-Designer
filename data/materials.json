@@ -1,0 +1,60 @@
+ {
+    "4130_steel": {
+        "density": 4.8,
+        "tensile_strength": 460,
+        "ultimate_strength": 560,
+        "elasticity_modulus": 190,
+        "shear_strength": 338,
+        "shear_modulus": 80,
+        "poisson_ratio": 0.3,
+        "CTE*10E-6": 11.2,
+        "K_t_ID": 1
+    },
+    "2014-T6": {
+        "density": 2.8,
+        "tensile_strength": 414,
+        "ultimate_strength": 483,
+        "elasticity_modulus": 72.4,
+        "shear_strength": 290,
+        "shear_modulus": 28,
+        "poisson_ratio": 0.33,
+        "CTE*10E-6": 20.8,
+        "K_t_ID": 6
+    },
+   "7075-T6": {
+        "density": 3,
+        "tensile_strength": 480,
+        "ultimate_strength": 560,
+        "elasticity_modulus": 70,
+        "shear_strength": 331,
+        "shear_modulus": 26 ,
+        "poisson_ratio": 0.32,
+        "CTE*10E-6": 23.4,
+        "K_t_ID": 6
+    },
+   "8630_steel": {
+        "density": 7.85,
+        "tensile_strength": 550,
+        "ultimate_strength": 620,
+        "elasticity_modulus": 190,
+        "shear_strength": 340,
+        "shear_modulus": 72 ,
+        "poisson_ratio": 0.3,
+        "CTE*10E-6": 11.2,
+        "K_t_ID": 1
+    },
+    "2024-T3": {
+        "density": 2.78,
+        "tensile_strength": 345,
+        "ultimate_strength": 483,
+        "elasticity_modulus": 73.1,
+        "shear_strength": 283,
+        "shear_modulus": 28,
+        "poisson_ratio": 0.33,
+        "CTE*10E-6": 23.2,
+        "K_t_ID": 4
+    }
+ }
+
+
+
