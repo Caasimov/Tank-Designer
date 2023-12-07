@@ -1,5 +1,5 @@
  {
-    "4130_steel": {
+    "Steel 4130": {
         "density": 4.8,
         "tensile_strength": 460,
         "ultimate_strength": 560,
@@ -10,7 +10,7 @@
         "CTE*10E-6": 11.2,
         "K_t_ID": 1
     },
-    "2014-T6": {
+    "Aluminum 2014-T6": {
         "density": 2.8,
         "tensile_strength": 414,
         "ultimate_strength": 483,
@@ -21,7 +21,7 @@
         "CTE*10E-6": 20.8,
         "K_t_ID": 6
     },
-   "7075-T6": {
+   "Aluminum 7075-T6": {
         "density": 3,
         "tensile_strength": 480,
         "ultimate_strength": 560,
@@ -32,7 +32,7 @@
         "CTE*10E-6": 23.4,
         "K_t_ID": 6
     },
-   "8630_steel": {
+   "Steel 8630": {
         "density": 7.85,
         "tensile_strength": 550,
         "ultimate_strength": 620,
@@ -43,7 +43,7 @@
         "CTE*10E-6": 11.2,
         "K_t_ID": 1
     },
-    "2024-T3": {
+    "Aluminum 2024-T3": {
         "density": 2.78,
         "tensile_strength": 345,
         "ultimate_strength": 483,
