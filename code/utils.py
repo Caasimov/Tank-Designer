@@ -1,52 +1,67 @@
 import math as m
+from typing import Tuple
 
-def findt(P: float, R: float, sigma_y: float) -> float:
+def findt_1(P: float, R: float, sigma_y: float) -> float:
     '''
     Determine the value of the shell thickness t_1 due to hoop stress
     '''
     t_1 = P * R / (sigma_y * m.pow(10, 6))
+    
     return t_1
     
-def findLambda(P: float, l: float, R: float, sigma_y: float, nu: float) -> float:
+def findLambda(t_1: float, l: float, R: float, nu: float) -> float:
     '''
     Determine the value of constant lambda in the shell buckling equation
     '''
-    t_1 = findt(P, R, sigma_y) # Determine the current thickness of the shell
     base = R**2 * t_1**2 / (12 * (1 - nu**2))
     m_const = m.pi * l * m.pow(base, -0.25) # Determine the number of half-waves alond the length, l
     lambda_const = m_const * m.pi * R / l
     
-    return m, lambda_const
+    return lambda_const
 
-def findk(P: float, l: float, R: float, sigma_y: float, nu: float) -> float:
+def findk(t_1: float, l: float, R: float, nu: float) -> float:
     '''
     Determine the constant k in the shell buckling equation
     '''
-    t_1 = findt(P, R, sigma_y)
-    _, lambda_const = findLambda(P, l, R, sigma_y, nu)
+    lambda_const = findLambda(t_1, l, R, nu)
     k = lambda_const + (12 / m.pi**4) * (l**4 / (R**2 * t_1**2)) * (1 - nu**2) / lambda_const
     
     return k
-    
 
-def findQ(P: float, E: float, R: float, sigma_y: float) -> float:
-    t = findt(P,R,sigma_y) #input from pressure function 
-    return( (P/E)*(R/t)**2)
-
-def eulerColBuck(F: float, E: float, l: float, R: float, P: float, sigma_y: float) -> bool:
+def findQ(P: float, t_1: float, E: float, R: float) -> float:
     '''
-    here we are determinining if the structure will fail through collumn buckling
+    Determine exponent Q in the shell buckling equation
     '''
-    t = findt(P,R,sigma_y) #input from pressure function 
-    I = m.pi * t * R**3
-    A = m.pi *((R+0.5*t)**2-(R-0.5*t)**2)
+    return (P / E) * (R / t_1)**2
+
+def findGeoProperties(t_1: float, R: float) -> Tuple[float, float]:
+    '''
+    Determine the geometric properties of the structure
+    '''
+    I = m.pi * t_1 * R**3 # Determine area moment of inertia
+    A = m.pi * ((R + (0.5 * t_1))**2 - (R - (0.5*t_1))**2) # Determine cross-sectional area
     
-    sigmaCrit = (m.pi**2 )* E *I /(A*(l**2))
+    return I, A
 
-    sigma = F/A
+def eulerColBuck(F: float, E: float, l: float, I: float, A: float) -> Tuple[float, float, bool]:
+    '''
+    Determine whether the structure will fail through Euler collumn buckling
+    '''
 
-    if sigma > sigmaCrit:
-        return False 
+    sigma_crit = (m.pi**2) * E * I / (A*(l**2))
 
-    else:
-        return True
+    sigma = F / A
+
+    return sigma, sigma_crit, sigma < sigma_crit
+
+def shellBuckling(P: float, F: float, t_1: float, l: float, R: float, A: float, E: float, nu: float) -> Tuple[float, float, float, bool]:
+    '''
+    Determine whether the structure will fail under shell buckling
+    '''
+    Q = findQ(P, t_1, E, R)
+    k = findk(t_1, l, R, nu)
+    
+    sigma = F / A
+    sigma_crit = (1.983 - (0.983 * m.exp(-23.14 * Q))) * k * (((m.pi**2) * E) / (12 * (1 - nu**2))) * (t_1 / l)**2
+    
+    return k, sigma, sigma_crit, sigma < sigma_crit
