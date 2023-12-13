@@ -1,13 +1,13 @@
 import math as m
 from typing import Tuple
 
-def findt_1(P: float, R: float, sigma_y: float) -> float:
+def check_t_1(P: float, t_1: float, R: float, sigma_y: float) -> bool:
     '''
-    Determine the value of the shell thickness t_1 due to hoop stress
+    Evaluate whether the pressure vessel withstands internal loads
     '''
-    t_1 = P * R / (sigma_y * m.pow(10, 6))
+    sigma = (P * R)/t_1
     
-    return t_1
+    return sigma < (sigma_y * m.pow(10, 6))
     
 def findLambda(t_1: float, l: float, R: float, nu: float) -> float:
     '''
@@ -34,6 +34,21 @@ def findQ(P: float, t_1: float, E: float, R: float) -> float:
     '''
     return (P / E) * (R / t_1)**2
 
+def findl(V: float, R: float, t_1: float )-> float:
+    '''Finding the required total length for a given tank radius and and the needed fuel volume'''
+    return V/(m.pi*(R-t_1)**2) - 4*(R-t_1)/3
+
+def roundUpN(val: float, N: int) -> float:
+    '''rounding up numbers to a required number of decimal places'''
+    temp = val * 10**N
+    return m.ceil(temp)/10**N
+
+def findMass(R: float,l: float,t_1: float, rho: float)->float:
+    '''find the mass of the empty tank from the given variables'''
+    VS = 4*m.pi*(R**3-(R-t_1)**3)/3
+    VC = m.pi*l*( R**2-(R-t_1)**2)
+    return (VS + VC) * rho * m.pow(10, 3)
+
 def findGeoProperties(t_1: float, R: float) -> Tuple[float, float]:
     '''
     Determine the geometric properties of the structure
@@ -43,7 +58,7 @@ def findGeoProperties(t_1: float, R: float) -> Tuple[float, float]:
     
     return I, A
 
-def eulerColBuck(F: float, E: float, l: float, I: float, A: float) -> Tuple[float, float, bool]:
+def eulerColBuckling(F: float, E: float, l: float, I: float, A: float) -> Tuple[float, float, bool]:
     '''
     Determine whether the structure will fail through Euler collumn buckling
     '''
