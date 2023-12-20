@@ -50,7 +50,7 @@ def findMass(R: float,l: float,t_1: float, rho: float)->float:
     VC = m.pi*l*( R**2-(R-t_1)**2)
     return (VS + VC) * rho * m.pow(10, 3)
 
-def findConnectorMass(R_outer: float, R_tank: float, F: float, E: float, rho: float, num_beam_pairs: int) -> float:
+def findConnectorMass(R_outer: float, R_tank: float, F: float, E: float, rho: float, num_beam_pairs: int) -> Tuple[float, float]:
     '''
     Determine the connector properties of the tank
     '''
@@ -66,7 +66,7 @@ def findConnectorMass(R_outer: float, R_tank: float, F: float, E: float, rho: fl
     
     mass_total = mass * 2 * num_beam_pairs
     
-    return mass_total
+    return mass_total, R
     
 def findGeoProperties(t_1: float, R: float) -> Tuple[float, float]:
     '''
@@ -106,7 +106,7 @@ def plotMaterialData(data, variable_properties):
         num_variables = len(connectors_data[next(iter(connectors_data))][0])
 
         # Adjust here to exclude the last two variables
-        num_variables_to_plot = num_variables - 2
+        num_variables_to_plot = num_variables - 3
 
         # Calculate the number of rows and columns for the subplots
         num_columns = 2

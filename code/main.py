@@ -7,13 +7,14 @@ with open('./data/materials.json', 'r') as fname:
     material_types = json.load(fname)
     
 # Spacecraft initial variables
+factor_of_safety = 1.5
 mass_wet = 955.707
 mass_tank = 59.11
 vehicle_radius = 0.786
 L_max = 2
 vol_prop = 0.945
 pressure = 24 * utils.m.pow(10, 5)
-axial_acceleration = 9 * 9.80665
+axial_acceleration = 9 * 9.80665 * factor_of_safety
 
 # Initialize variables
 var_history = {}
@@ -66,7 +67,7 @@ for material_name, material_properties in material_types.items():
                     if l > R_n and L < L_max:
                         mass = utils.findMass(R_n, l, t_m, material_properties['density']) # Determine mass of current fuel tank geometry
                         F = axial_acceleration * (mass_wet - mass_tank + m) # Determine new force due to tank geometry
-                        mass_connector = utils.findConnectorMass(vehicle_radius, R_n, F, material_types['Steel 4130']['elasticity_modulus'], material_types['Steel 4130']['density'], num_connector)
+                        mass_connector, radius_connector = utils.findConnectorMass(vehicle_radius, R_n, F, material_types['Steel 4130']['elasticity_modulus'], material_types['Steel 4130']['density'], num_connector)
                         F = axial_acceleration * (mass_wet - mass_tank + m + mass_connector) # Determine new force due to tank geometry
                         
                         k = utils.findk(t_m, l, R_n, material_properties['poisson_ratio']) # Determine the variable k to be optimized in shell buckling equation
@@ -83,7 +84,7 @@ for material_name, material_properties in material_types.items():
                         # If both buckling checks pass and the mass of the current geometry is smaller than the previous optimal solution, then this is now recorded
                         if not var_opt and check_eul and check_shell and check_hoop:
 
-                            new_var_opt = [l, R_n, t_m, k, mass_connector, mass, (sigma_eul, sigma_crit_eul), (sigma_shell, sigma_crit_shell)]
+                            new_var_opt = [l, R_n, t_m, k, mass_connector, mass, (sigma_eul, sigma_crit_eul), (sigma_shell, sigma_crit_shell), radius_connector]
                             var_opt = new_var_opt
                             
                             # Bounds of grid search are updated to match with current optimal solution
@@ -93,7 +94,7 @@ for material_name, material_properties in material_types.items():
                             t_max = t_0 + delta_t
                         
                         elif check_eul and check_shell and check_hoop and (mass + mass_connector < var_opt[4] + var_opt[5]):
-                            new_var_opt = [l, R_n, t_m, k, mass_connector, mass, (sigma_eul, sigma_crit_eul), (sigma_shell, sigma_crit_shell)]
+                            new_var_opt = [l, R_n, t_m, k, mass_connector, mass, (sigma_eul, sigma_crit_eul), (sigma_shell, sigma_crit_shell), radius_connector]
                             var_opt = new_var_opt
                             
                             # Bounds of grid search are updated to match with current optimal solution
